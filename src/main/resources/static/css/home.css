@@ -1,0 +1,110 @@
+#navi {
+    /* background-color: #007AFF; */
+    width: 80%;
+    height: 74%;
+    margin-left: 10%;
+    margin-top: 10%;
+    font-family: 微软雅黑, serif;
+}
+
+.navicate {
+    margin: 1%;
+    padding: 0;
+    width: 98%;
+    height: 33%;
+    /* background-color: #2AC845; */
+    text-align: center;
+    color: #F7F7F7;
+    font-family: "微软雅黑";
+}
+
+.logo {
+    width: 60%;
+    margin-left: 20%;
+    margin-bottom: 5%;
+    border-radius: 50%;
+    display: block;
+}
+
+
+#code {
+    font-family: '微软雅黑';
+    font-size: 11px;
+    color: #AAAAAA;
+    text-align: center;
+    padding: 0.5rem;
+}
+
+
+.mui-card {
+    border-radius: 10px;
+}
+
+.mui-card-header {
+    padding-bottom: 0;
+}
+
+.mui-card-content {
+    width: 100%;
+    height: 300px;
+}
+
+#end {
+    margin-top: 10px;
+    margin-bottom: 7px;
+    display: block;
+    text-align: center;
+    font-size: 12px;
+    color: #B6B6B6;
+}
+
+
+.myfooter {
+    height: 30px;
+    /* line-height: 40px; */
+    position: fixed;
+    bottom: 0;
+    width: 90%;
+    text-align: center;
+    /* background: white; */
+    color: #AAAAAA;
+    font-size: 11px;
+    /*letter-spacing: 1px;*/
+}
+
+.tips {
+    height: 80px;
+    left: 5%;
+    position: fixed;
+    bottom: 0;
+    width: 90%;
+    text-align: center;
+    color: #AAAAAA;
+    font-size: 10px;
+}
+
+/*******顶部导航栏透明************/
+.mui-bar {
+    padding-right: 5px;
+    font-size: 28px;
+}
+
+.mui-content{
+    /*background-color: white;*/
+}
+
+.balance_show{
+    background-color: #2ac845;
+    height: 150px;
+    text-align: center;
+    /*-webkit-filter: blur(10px); !* Chrome, Opera *!
+    -moz-filter: blur(10px);
+    -ms-filter: blur(10px);
+    filter: blur(10px);*/
+}
+
+.balance_show h1{
+    font-family: "微软雅黑" , serif;
+    font-size: 50px;
+    line-height: 150px;
+}

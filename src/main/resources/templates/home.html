@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:include="head::head">
+</head>
+<head>
+    <link rel="stylesheet" type="text/css" href="/css/home.css"/>
+    <script type="text/javascript" src="/js/home.js"></script>
+    <title>Ant账本 | 主页</title>
+</head>
+<body>
+<div class="mui-off-canvas-wrap mui-draggable mui-scalable">
+
+    <!-- 菜单容器 -->
+    <aside class="mui-off-canvas-left mui-transitioning" id="offCanvasSide">
+        <div class="mui-scroll-wrapper">
+            <div class="mui-scroll" id="navi">
+                <div class="mui-card" style="margin-bottom: 35px;" sec:authorize="isAuthenticated()">
+                    <div class="userinfo">
+                        <ul class="mui-table-view">
+                            <li class="mui-table-view-cell mui-media">
+                                <img class="mui-media-object mui-pull-left" src="/img/头像.png"
+                                     style="margin-right: 20px">
+                                <div class="mui-media-body">
+                                    <b><span sec:authentication="principal.username" style="font-size: 22px"></span></b>
+                                    <small><p class='mui-ellipsis'>ID: <span sec:authentication="principal.id"></span>
+                                    </p></small>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="mui-card" style="margin-bottom: 35px;" id="mynav">
+                    <ul class="mui-table-view">
+                        <li class="mui-table-view-cell" href="/newBook">
+                            <a class="mui-navigate-right">
+                                新建账本
+                            </a>
+                        </li>
+
+                        <li class="mui-table-view-cell mui-collapse"><a class="mui-navigate-right" href="#">我的账本</a>
+                            <ul class="mui-table-view mui-table-view-chevron">
+                                <li class="mui-table-view-cell" th:each="book:${session.bookList}"
+                                    th:href="${'/home?book_id=' + book.book_id}"><a class="mui-navigate-right"
+                                                                                    href="/home"
+                                                                                    th:text="${book.book_name}"></a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="mui-table-view-cell" href="/inviteConfirm">
+                            <a class="mui-navigate-right">
+                                收到的邀请
+                            </a>
+                            <span class="mui-badge mui-badge-warning" id="inviteNum" style="display: none"></span>
+                        </li>
+
+                        <li class="mui-table-view-cell" href="/cgPwd">
+                            <a class="mui-navigate-right">
+                                修改密码
+                            </a>
+                        </li>
+
+                        <li class="mui-table-view-cell" href="/logout">
+                            <a class="mui-navigate-right">
+                                退出登录
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="myfooter">
+                <label><b>CopyRight © Ant记账本</b></label>
+            </div>
+        </div>
+    </aside>
+
+    <!-- 主页面容器 -->
+    <div class="mui-inner-wrap mui-transitioning">
+        <!-- 主页面标题 -->
+        <header class="mui-bar mui-bar-nav">
+            <a class="mui-icon mui-icon-contact mui-pull-left" href="#offCanvasSide"></a>
+            <h1 class="mui-title">
+                <span th:if="${session.nobook}">未找到账本</span>
+                <span th:unless="${session.nobook}"><span th:text="${session.book.book_name}"></span></span>
+            </h1>
+        </header>
+
+
+        <div class="mui-content mui-scroll-wrapper" th:if="${!session.nobook}">
+            <div class="balance_show" id="balance_show">
+                <h1><span>¥ </span><span id="balance" th:text="${session.balance}">0.00</span></h1>
+            </div>
+
+            <div class="menu_show" id="menu_show">
+                <ul class="mui-table-view mui-grid-view mui-grid-9">
+                    <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3" th:href="'/bookkeeping?book_id=' + ${session.book.book_id}"><a>
+                        <img src="/img/记录.png" width="40px">
+                        <div class="mui-media-body">记&nbsp;&nbsp;&nbsp;&nbsp;账</div>
+                    </a></li>
+
+                    <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3" href="#"><a>
+                        <span class="mui-badge mui-badge-purple">454</span>
+                        <img src="/img/确认单.png" width="40px">
+                        <div class="mui-media-body">账单确认</div>
+                    </a></li>
+
+                    <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3" href="#"><a>
+                        <img src="/img/账单.png" width="40px">
+                        <div class="mui-media-body">账单记录</div>
+                    </a></li>
+
+
+                    <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3" href="#"><a>
+                        <!--<span class="mui-icon mui-icon-location"></span>-->
+                        <img src="/img/用户组.png" width="40px">
+                        <div class="mui-media-body">账本成员</div>
+                    </a></li>
+
+                    <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3" href="#"><a>
+                        <!--<span class="mui-icon mui-icon-location"></span>-->
+                        <img src="/img/邀请.png" width="40px">
+                        <div class="mui-media-body">邀请加入</div>
+                    </a></li>
+
+                    <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3" href="#"><a>
+                        <!--<span class="mui-icon mui-icon-location"></span>-->
+                        <img src="/img/转账.png" width="40px">
+                        <div class="mui-media-body">内部转账</div>
+                    </a></li>
+
+                    <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3" href="#"><a>
+                        <!--<span class="mui-icon mui-icon-location"></span>-->
+                        <img src="/img/报表.png" width="40px">
+                        <div class="mui-media-body">统计报表</div>
+                    </a></li>
+
+                    <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3 " href=""><a>
+                        <span class="mui-icon mui-icon-more"></span>
+                        <div class="mui-media-body">敬请期待</div>
+                    </a></li>
+                </ul>
+            </div>
+            <div class="tips">
+                <p><b>Tips:此处显示金额不为余额</b></p>
+                <p>eg:用户消费了30元，有3位用户加入了此账本<br>那么此时显示金额应为20，其余两位用户显示为-10</p>
+            </div>
+        </div>
+
+        <div class="mui-content mui-scroll-wrapper" th:if="${session.nobook}" style="height: 100%;">
+            <div class="middle-box">
+                <p><span class="suc-tip"><big>您还未创建账本</big></span><br/><span>请右滑点击 <b><a href="/newBook">新建账本</a></b> 创建</span>
+                </p>
+                <i class="visible"></i>
+            </div>
+        </div>
+
+        <div class="mui-off-canvas-backdrop"></div>
+    </div>
+</div>
+</body>
+<style type="text/css">
+    .middle-box {
+        height: 600px;
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    .middle-box p {
+        font-family: '微软雅黑', serif;
+        vertical-align: middle;
+        display: inline-block;
+        *display: inline;
+        *zoom: 1;
+    }
+
+    .visible {
+        height: 100%;
+        vertical-align: middle;
+        width: 0;
+        display: inline-block;
+    }
+</style>
+
+</html>

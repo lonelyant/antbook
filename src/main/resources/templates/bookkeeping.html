@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="head::head">
+</head>
+<head>
+    <!--<link rel="stylesheet" type="text/css" href="/css/login.css" />
+    <script type="text/javascript" src="/js/login.js" ></script>-->
+    <title>Ant账本 | 记账</title>
+</head>
+<body>
+<div class="mui-content">
+    <!-- 主页面标题 -->
+        <header class="mui-bar mui-bar-nav" >
+            <a class="mui-icon mui-icon-left-nav mui-pull-left" href="javascript:" onclick="history.back(); "></a>
+            <h1 class="mui-title" th:text="${session.book.book_name} + ' - 记账'">
+            </h1>
+        </header>
+
+        <div class="mui-card" style="margin-top: 17px;padding-top: 34px">
+            <form class="mui-input-group">
+                <input type="hidden" class="mui-input-clear" id="book_id" disabled th:value="${session.book.book_id}">
+                <div class="mui-input-row">
+                    <label> 支出名</label>
+                    <input type="text" class="mui-input-clear" placeholder="花在哪了？" id="pname">
+                </div>
+                <div class="mui-input-row">
+                    <label> 支出类别</label>
+                    <select class="mui-select" id="category">
+                        <option value="1">菜米油盐</option>
+                        <option value="2">购 物</option>
+                        <option value="3">水电煤</option>
+                        <option value="9">其 它</option>
+                    </select>
+                </div>
+                <div class="mui-input-row">
+                    <label> 支出金额</label>
+                    <input type="number" class="mui-input-clear" placeholder="请输入金额" id="price">
+                </div>
+                <div class="mui-input-row">
+                    <label> 账 本</label>
+                    <input type="text" id="book_name" disabled th:value="${session.book.book_name} + ' (不可更改)'" >
+                </div>
+                <div class="mui-input-row" style="height: 200px">
+                    <label> 备注</label>
+                    <textarea class="mui-input-clear" placeholder="eg:洗发水、拖把、洗衣液" rows="8" id="remark"></textarea>
+                </div>
+                <div class="mui-button-row">
+                    <button type="button" class="mui-btn mui-btn-primary" id="submitinfo">记 录</button>
+                </div>
+            </form>
+        </div>
+</div>
+</body>
+<style type="text/css">
+    .showred{
+        border: 1px solid red;
+    }
+</style>
+<script type="text/javascript">
+    $(".mui-input-clear").focus(function () {
+        $('#'+this.getAttribute("id")).parent().removeClass("showred");
+    });
+
+    document.getElementById("submitinfo").addEventListener('tap',function (e) {
+
+        var pname = $('#pname').val();
+        var category = $('#category').val();
+        var price = $('#price').val();
+        var book_id = $('#book_id').val();
+        var remark = $('#remark').val();
+
+        if (pname.length < 1){
+            mui.toast("支出名不能为空！");
+            $('#pname').parent().addClass("showred");
+            return;
+        }
+        if (price.length < 1){
+            mui.toast("支出金额不能为空！");
+            $('#price').parent().addClass("showred");
+            return;
+        }
+        /* 开始上传 */
+        var formData = new FormData();
+        formData.append("pname",pname)
+        formData.append("category",category);
+        formData.append("price",price);
+        formData.append("book_id",book_id);
+        formData.append("remark",remark);
+
+        mui(this).button('loading');
+        $.ajax({
+            type : "POST",//提交方式
+            url : "/addRecord",//提交地址
+            data:formData,
+            processData:false,
+            contentType:false,
+            success : function(data) {
+                if(data.status){
+                    mui.toast("操作成功！");
+                    setTimeout(function () {
+                        window.location.href = "/home?book_id=" + book_id;
+                    },500);
+                }else{
+                    mui(this).button('reset');
+                    alert("操作失败\n"+data.info);
+                }
+            },
+            error : function(request) {
+                mui(this).button('reset');
+                alert("网络错误！！！联系我解决");
+            }
+        });
+    })
+</script>
+</html>

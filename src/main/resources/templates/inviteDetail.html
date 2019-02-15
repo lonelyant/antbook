@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="head::head">
+</head>
+<head>
+    <!--<link rel="stylesheet" type="text/css" href="/css/login.css" />-->
+    <!--<script type="text/javascript" src="/js/inviteConfirm.js" ></script>-->
+    <title>Ant账本 | 邀请详情</title>
+</head>
+<body>
+<!-- 主页面标题 -->
+<header class="mui-bar mui-bar-nav">
+    <a class="mui-icon mui-icon-left-nav mui-pull-left" href="javascript:" onclick="history.back(); "></a>
+    <h1 class="mui-title">
+        来自 <span th:text="${session.invite.from_name}"></span> 的邀请
+    </h1>
+</header>
+
+<!--下拉刷新容器-->
+<div class="mui-content mui-scroll-wrapper">
+    <div class="mui-card">
+        <div class="mui-card-header"><b>加入 <span th:text="${session.book.book_name}"></span></b></div>
+        <div class="mui-card-content">
+            <div class="mui-card-content-inner">
+                <div class="mui-input-group">
+                    <div class="mui-input-row">
+                        <label>邀请人</label>
+                        <input type="text" class="mui-input" readonly th:value="${session.invite.from_name} + ' (ID:' + ${session.invite.from} + ')'">
+                    </div>
+                    <div class="mui-input-row">
+                        <label>邀请时间</label>
+                        <input type="text" class="mui-input" readonly th:value="${session.invite.createtime}">
+                    </div>
+                    <div class="mui-input-row">
+                        <label>状 态</label>
+                        <!--<input type="text" class="mui-input" readonly value="等待处理" style="">-->
+                        <div class="mui-input" style="height: 40px;line-height: 40px" th:switch="${session.invite.status}">
+                            <span class="mui-badge mui-badge-warning" th:case="0">等待处理</span>
+                            <span class="mui-badge" th:case="1">已接受</span>
+                            <span class="mui-badge mui-badge-purple" th:case="2">已拒绝</span>
+                        </div>
+                    </div>
+                    <div class="mui-input-row">
+                        <label><b>账本详情</b></label>
+                    </div>
+                </div>
+
+                <div class="mui-card">
+                    <div class="mui-card-header"><b th:text="${session.book.book_name}"></b> <b>ID:<span th:text="${session.book.book_id}"></span></b></div>
+                    <div class="mui-card-content">
+                        <div class="mui-card-content-inner">
+                            <div class="mui-input-group">
+                                <div class="mui-input-row">
+                                    <label>创建人</label>
+                                    <input type="text" class="mui-input" readonly th:value="${session.creater.username} + ' (ID:' + ${session.creater.id} + ')'">
+                                </div>
+                                <div class="mui-input-row">
+                                    <label>创建时间</label>
+                                    <input type="text" class="mui-input" readonly th:value="${session.book.createtime}">
+                                </div>
+                                <div class="mui-input-row">
+                                    <label>成员数量</label>
+                                    <input type="text" class="mui-input" readonly th:value="${session.userCount}">
+                                </div>
+                                <div class="mui-input-row">
+                                    <label>账本描述</label>
+                                    <textarea readonly th:text="${session.book.descript}" style="font-size: 15px"></textarea>
+                                </div>
+                                <div class="mui-input-row"style="height: 0px;margin: 0px;padding: 0px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mui-card-footer" th:if="${session.invite.status == 0}">
+            <button type="button" class="mui-btn mui-btn-success mui-icon mui-icon-checkmarkempty" th:href="'/inviteAnswer?invite_id='+ ${session.invite.invite_id} +'&op=1'" onclick="opt1(this.getAttribute('href'))">接 受</button>
+            <button type="button" class="mui-btn mui-btn-danger mui-icon mui-icon-closeempty"  th:href="'/inviteAnswer?invite_id='+ ${session.invite.invite_id} +'&op=2'" onclick="opt2(this.getAttribute('href'))">拒 绝</button>
+        </div>
+    </div>
+</div>
+
+</body>
+
+<script>
+    function opt1(url) {
+        mui.confirm('确认要接受这条邀请吗？','操作确认',['否', '是'],function (e) {
+            if (e.index == 1) {
+                $.get(url,function (data) {
+                    if (data.status){
+                        location.reload();
+                    }else {
+                        mui.alert(data.msg);
+                    }
+                });
+            }
+        })
+    }
+    function opt2(url) {
+        mui.confirm('确认要拒绝这条邀请吗？','操作确认',['否', '是'],function (e) {
+            if (e.index == 1) {
+                $.get(url,function (data) {
+                    if (data.status){
+                        location.reload();
+                    }else {
+                        mui.alert(data.msg);
+                    }
+                });
+            }
+        })
+    }
+</script>
+</html>

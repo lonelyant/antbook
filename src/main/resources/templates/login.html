@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="head::head">
+</head>
+<head>
+    <link rel="stylesheet" type="text/css" href="/css/login.css" />
+    <script type="text/javascript" src="/js/login.js" ></script>
+    <title>Ant账本 | 登录</title>
+</head>
+<body>
+<div class="mui-content">
+    <div class="logo">
+        <img src="/img/记账本(白).png" width="72px" style="margin-left: 12%;margin-right: 20px;float: left"><div style="float: left;margin-top: 25px"><span style="font-size: 20px;"><b>多人记账 就用Ant记账本</b></span></div>
+    </div>
+
+    <div class="mui-card" style="clear: both;top: 50px">
+        <div class="mui-card-content">
+            <form class="mui-input-group" id="myform" name="myform" action="/login" method="post">
+                <div class="mui-input-row">
+                    <label>账号</label>
+                    <input type="text" class="mui-input-clear" name="username" id="username" placeholder="请输入账号">
+                </div>
+                <div class="mui-input-row">
+                    <label>密码</label>
+                    <input type="password" class="mui-input-password" name="password" id="password" placeholder="请输入密码">
+                </div>
+                <div class="mui-input-row mui-checkbox" style="text-align: left">
+                    <label><input type="checkbox" name="remember-me"/>自动登录</label>
+                </div>
+                <div class="mui-button-row">
+                    <button id="submit" type="button" data-loading-text="登录中..." class="mui-btn mui-btn-primary">提 交</button>
+                    <input type="submit" id="submitclick" style="display: none" value="提交"/>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+<div class="myfooter">
+    <label><a onclick="window.location.href='/register'">注册账号</a> <span class="spliter">|</span> <a onclick="javascript:show()">忘记密码</a></label><br>
+    <label><b>© 2019 Ant记账本 | Powered By Ant</b></label>
+</div>
+</body>
+<script>
+    function show(){
+        mui.alert("暂未开放此功能！");
+    }
+</script>
+</html>

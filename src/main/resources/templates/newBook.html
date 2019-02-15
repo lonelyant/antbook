@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="head::head">
+</head>
+<head>
+    <!--<link rel="stylesheet" type="text/css" href="/css/login.css" />
+    <script type="text/javascript" src="/js/login.js" ></script>-->
+    <title>Ant账本 | 新建账本</title>
+</head>
+<body>
+<div class="mui-content">
+    <!-- 主页面标题 -->
+    <header class="mui-bar mui-bar-nav" >
+        <a class="mui-icon mui-icon-left-nav mui-pull-left"  href="javascript:" onclick="history.back(); "></a>
+        <h1 class="mui-title">
+            新建账本
+        </h1>
+    </header>
+
+    <div class="mui-card" style="margin-top: 17px;padding-top: 34px">
+        <form class="mui-input-group">
+            <div class="mui-input-row">
+                <label> 账本名称</label>
+                <input type="text" class="mui-input-clear" placeholder="请输入账本名" id="book_name">
+            </div>
+            <div class="mui-input-row" id="desc">
+                <label> 简单描述</label>
+                <textarea class="mui-input-clear" placeholder="一句话描述" id="descript"></textarea>
+            </div>
+            <div class="mui-button-row">
+                <button type="button" class="mui-btn mui-btn-primary" id="submitinfo">创 建</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+<style type="text/css">
+    .showred{
+        border: 1px solid red;
+    }
+</style>
+<script type="text/javascript">
+    $(".mui-input-clear").focus(function () {
+        $('#'+this.getAttribute("id")).parent().removeClass("showred");
+    });
+
+    document.getElementById("submitinfo").addEventListener('tap',function (e) {
+
+        var book_name = $('#book_name').val();
+        var descript = $('#descript').val();
+
+        if (book_name.length < 1){
+            mui.toast("账本名不能为空！");
+            $('#book_name').parent().addClass("showred");
+            return;
+        }
+        /* 开始上传 */
+        var formData = new FormData();
+        formData.append("book_name",book_name)
+        formData.append("descript",descript);
+
+        mui(this).button('loading');
+        mui($('#modal_close')).button('loading');
+        $.ajax({
+            type : "POST",//提交方式
+            url : "/addNewBook",//提交地址
+            data:formData,
+            processData:false,
+            contentType:false,
+            success : function(data) {
+                if(data.status){
+                    mui.toast("操作成功！");
+                    setTimeout(function () {
+                        window.location.href = "/home";
+                    },500);
+                }else{
+                    mui(this).button('reset');
+                    mui($('#modal_close')).button('reset');
+                    alert("操作失败\n"+data.info);
+                }
+            },
+            error : function(request) {
+                mui(this).button('reset');
+                mui($('#modal_close')).button('reset');
+                alert("网络错误！！！联系我解决");
+            }
+        });
+    })
+</script>
+</html>

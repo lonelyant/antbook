@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="head::head">
+</head>
+<head>
+    <!--<link rel="stylesheet" type="text/css" href="/css/login.css" />
+    <script type="text/javascript" src="/js/login.js" ></script>-->
+    <title>Ant账本 | 用户注册</title>
+</head>
+<body>
+<div class="mui-content">
+    <!-- 主页面标题 -->
+    <header class="mui-bar mui-bar-nav" >
+        <a class="mui-icon mui-icon-left-nav mui-pull-left" href="javascript:" onclick="history.back();"></a>
+        <h1 class="mui-title">
+            用户注册
+        </h1>
+    </header>
+
+    <div class="mui-card" style="margin-top: 17px;padding-top: 34px">
+        <form class="mui-input-group">
+            <div class="mui-input-row">
+                <label> 用户名</label>
+                <input type="text" class="mui-input-clear" placeholder="请输入用户名" id="username">
+            </div>
+            <div class="mui-input-row">
+                <label> 密 码</label>
+                <input type="password" class="mui-input-password" name="password" id="password1" placeholder="请输入密码">
+            </div>
+            <div class="mui-input-row">
+                <label> 确认密码</label>
+                <input type="password" class="mui-input-password" name="password" id="password2" placeholder="请再次输入密码">
+            </div>
+            <div class="mui-button-row">
+                <button type="button" class="mui-btn mui-btn-primary" id="submitinfo">注 册</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+<style type="text/css">
+    .showred{
+        border: 1px solid red;
+    }
+    .showgreen{
+        border: 1px solid green;
+    }
+</style>
+<script type="text/javascript">
+    $(".mui-input-clear,.mui-input-password").focus(function () {
+        $('#'+this.getAttribute("id")).parent().removeClass("showred");
+        $('#'+this.getAttribute("id")).parent().removeClass("showgreen");
+    });
+
+    $("#username").blur(function () {
+        var c_username = $('#username').val();
+        if (c_username === "")return;
+        $.ajax({
+            type : "POST",//提交方式
+            url : "/checkUsername",//提交地址
+            data:{
+                c_username: c_username
+            },
+            dataType: "json",
+            success : function(data) {
+                if(!data){
+                    mui.alert("用户名已经被使用！");
+                    $('#username').parent().addClass("showred");
+                }else{
+                    $('#username').parent().addClass("showgreen");
+                }
+            },
+            error : function(XMLHttpRequest, textStatus, errorThrown) {
+                console.log(XMLHttpRequest);
+                console.log(textStatus);
+                console.log(errorThrown);
+            }
+        });
+    });
+
+    document.getElementById("submitinfo").addEventListener('tap',function (e) {
+
+        var username = $('#username').val();
+        var password1 = $('#password1').val();
+        var password2 = $('#password2').val();
+
+        if (username.length < 1){
+            mui.toast("用户名不能为空！");
+            $('#username').parent().addClass("showred");
+            return;
+        }
+        if (password1.length < 1){
+            mui.toast("密码不能为空！");
+            $('#password1').parent().addClass("showred");
+            return;
+        }
+        if (password2.length < 1){
+            mui.toast("密码确认不能为空！");
+            $('#password2').parent().addClass("showred");
+            return;
+        }
+        if (password1 !== password2){
+            mui.toast("两次密码输入不一致！");
+            $('#password2').parent().addClass("showred");
+            return;
+        }
+
+        /* 开始上传 */
+        var formData = new FormData();
+        formData.append("username",username);
+        formData.append("password",password1);
+
+        mui(this).button('loading');
+        $.ajax({
+            type : "POST",//提交方式
+            url : "/userRegister",//提交地址
+            data:formData,
+            processData:false,
+            contentType:false,
+            success : function(data) {
+                if(data.status){
+                    mui.toast("注册成功！");
+                    setTimeout(function () {
+                        window.location.href = "/login";
+                    },500);
+                }else{
+                    mui(document.getElementById("submitinfo")).button('reset');
+                    mui.alert(data.msg);
+                }
+            },
+            error : function(request) {
+                mui(document.getElementById("submitinfo")).button('reset');
+                mui.alert("网络错误！！！联系我解决");
+            }
+        });
+    })
+</script>
+</html>
